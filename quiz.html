@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    body {    
+        background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20210915/pngtree-geometric-pattern-white-gold-minimalist-creative-background-image_879782.jpg");  
+        background-size:cover;
+        color:magenta;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        font-size:large;
+        }  
+        a
+        {
+          color: aqua;
+        }
+        </style>
+    <title>Online Quiz System</title>
+</head>
+<body>
+    <code>
+    <script>
+        var loggedInUser  = localStorage.getItem("loggedInUser") ;
+        if (loggedInUser) {
+             document.body.innerHTML += "<p>Welcome, " + loggedInUser + "!</p>";
+        } else {
+            document.body.innerHTML += "<p>No user logged in.</p>";
+        }
+    </script>
+    </code>
+    <div id="timer" class="quiz-co" style="text-align:right">Time: <span id="time">00:00</span></div>
+<div style="padding-top: 10px;"></div>
+    <div class="quiz-container">
+        <body>
+            
+            <div></div>
+        <h1 style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;">Online Quiz System </h1>
+        <br>
+        <div style="font-size: larger;"></div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <label style="font-size:x-large;"    for="subject-select">Select Subject:</label>
+        <select  id="subject-select">
+            <option value="HTML">HTML</option>
+            <option value="JAVA">JAVA</option>
+            <option value="DBMS">DBMS</option>
+            <option value="PYTHON">PYTHON</option>
+            <option value="DS">DS</option>
+        </select>
+    <br><br>
+            <button style="font-size: larger; background-color: aquamarine;"   id="start-btn" onclick="startQuiz()">Start</button>
+        <div  id="quiz" style="display: none;">
+            <div id="question-container"></div><br>
+            <button style="font-size: larger; background-color:aquamarine;"  id="prev-btn" onclick="prevQuestion()">Previous</button>
+            <button style="font-size: larger; background-color:aquamarine;" id="next-btn" onclick="nextQuestion()">Next</button>
+            <button style="font-size: larger; background-color:aquamarine;" id="submit-btn" onclick="submitQuiz()">Submit</button>
+            
+        </div>
+        <div id="result" style="display: none;"id="thankyou" style="display: none;">
+            <h2 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Quiz Result</h2>
+            <p  style="font-size:x-large;"  id="correct-answers">Number of correct answers: </p>
+            <p  style="font-size:x-large;"   id="percentage">Percentage: </p><br>
+            <h2 style="color:red;">Thank you for completing the quiz!</h2><br>
+        </div>
+    </div>
+    </body>
+    <style>
+        .quiz-container {
+            color: blueviolet;
+            text-align: center;
+            margin: 20px;
+        }
+        #quiz {
+            font-size: larger;
+            color: black;
+            margin-top: 50px;
+        }
+        #question-container {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-family:Arial;
+        }
+        #timer {
+            font-size:larger;
+            font-weight:900;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-stretch:extra-expanded;
+            color: red;
+            margin-top: 0px;
+        }
+        #result {
+            color:indigo;
+            margin-top: 20px;
+            display: none;
+        }
+
+        #thankyou {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+    <script>
+        let currentSubject;
+        let currentQuestionIndex = 0;
+        let timer;
+        let totalTime = 600;
+        let answers = {};
+        const quizData = {
+ HTML: [ 
+    { question:"1.HTML full form__",options: ["HyperText Markup Language","HyperTest Makeup Language","HyperText Machine Language","None of these"], correct: "HyperText Markup Language"},
+    { question: "2.The correct sequence of HTML tags for starting a webpage is?", options: ["Head,Title,HTML,body","HTML,Body,Title,Head","HTML,Head,Title,Body","HTML,Head,Title,Body"], correct:"HTML,Head,Title,Body" },
+    { question: "3.What HTML tag is used to define an unordered list", options: ["U","O","L","UL"], correct: "L" },
+    { question: "4.Which of the following is the correct way to change the font face in HTML?", options: ["< font name = Calibri > ……… < /font >","< font face = Calibri > ……… < /font >","< font = Calibri > ……… < /font >","None of these"], correct: "< font face = Calibri > ……… < /font >" },
+    { question: "5.In HTML, elements are defined by a tag that encloses the start and end tags.?", options: ["TRUE","FLASE"], correct: "TRUE" },
+    { question: "6.filename.html is also save as filename.htm", options: ["TRUE","FLASE"], correct: "FLASE" },
+    { question: "7.What is the smallest header in HTML by default?", options: ["h1","h2","h6","h4"], correct: "h6" },
+    { question: "8.HTML tags are enclosed in...", options: ["# and #","{ and }","! and ?","< and >"], correct: "< and >" },
+    { question: "9.HTML tags are not case-sensitive.",options: ["TRUE","FLASE"], correct: "TRUE" },
+    { question: "10.HTML attributes provide additional information about an element.",options: ["TRUE","FLASE"], correct: "TRUE" },
+],
+ JAVA: [
+    { question: "1) Which of the following option leads to the portability and security of Java?", options: ["Bytecode is executed by JVM", "The applet makes the java code secure and portable", "Use of exception handling", "dynamic binding between objects"], correct: "Bytecode is executed by JVM" },
+    { question: "2) Which of the following is not a Java features?", options: ["Dynamic", "Architecture Neutral", "Use of pointers", "Object-oriented"], correct: "Use of pointers" },
+    { question: "3) JDK is used to find and fix bugs in the Java programs.", options: ["True", "Flase"], correct: "Flase" },
+    { question: "4) What is the return type of the hashCode() method in the Object class?", options: ["Object", "int", "long", "void"], correct: "int" },
+    { question: "5) The valid declaration of a char in java is char ch ='\ utea';", options: ["True", "Flase"], correct: "True" },
+    { question: "6) Which of the following is a valid long literal?", options: ["ABH8097", "L990023", "904423", "0knf029L"], correct: "ABH8097" },
+    { question: "7) Object is a reserved keyword in Java.", options: ["True", "Flase"], correct: "Flase" },
+    { question: "8) Which of the following creates a List of 3 visible items and multiple selections abled?", options: ["new List(false,3)", "new List(3,true)", "new List(true,3)", "new List(3,false)"], correct: "new List(3,true)" },
+    { question: "9) Which of the following tool is used to generate API documentation in HTML format from doc comments in source code?", options: ["javap tool", "javaw command", "Javadoc tool", "javah command"], correct: "Javadoc tool" },
+    { question: "10) Applet class is an immediate subclass of the Panel class in java.", options: ["True", "Flase"], correct: "True" }, 
+],
+ DBMS: [
+    { question: "1) Which of the following is generally used for performing tasks like creating the structure of the relations, deleting relation?", options: ["DML", "Query", "Relation Schema", "DDL"], correct: "DDL" },
+    { question: "2) Which of the following provides the ability to query information from the database and insert tuples into, delete tuples from, and modify tuples in the database?", options: ["DML", "DDL", "Query", "Relation Schema"], correct: "DML" },
+    { question: "3) Which one of the following given statements possibly contains the error?", options: ["select * from emp where empid = 10003;", "select empid from emp where empid = 10006;", "select empid from emp;", "select empid where empid = 1009 and Lastname = 'GELLER';"], correct: "select empid where empid = 1009 and Lastname = 'GELLER'; "},
+    { question: "4) One teacher can have many classes is one to many relationships.", options: ["True", "Flase"], correct: "True" },
+    { question: "5) Which of the following can be considered as the maximum size that is supported by FAT?", options: ["8GB", "4GB", "4TB", "None of the above",], correct: "4GB" },
+    { question: "6) The term NTFS refers to which one of the following?", options: ["New Technology File System", "New Tree File System", "New Table type File System", "Both A and C"], correct: "New Technology File System" },
+    { question: "7) The term FAT is stands for File Allocation Tree.", options: ["True", "Flase"], correct: "Flase" },
+    { question: "8) A huge collection of the information or data accumulated form several different sources is known as Data Warehouse", options: ["True", "Flase"], correct: "True" },
+    { question: "9) Which one of the following refers to the copies of the same data (or information) occupying the memory space at multiple places.", options: ["Data Repository", "Data Inconsistency", "Data Mining", "Data Redundancy"], correct: "Data Redundancy" },
+    { question: "10) Which one of the following refers to the data about data?", options: ["Directory", "Sub Data", "Warehouse", "Meta Data"], correct: "Meta Data" },
+],
+ PYTHON: [
+     { question: "1)What is the maximum possible length of an identifier?" , options:["16","32","64","None of these above"],correct: "None of these above"},
+     { question: "2)Who developed the Python language?" , options:["Guido van Rossaum","Wick van Rossum"],correct: "Guido van Rossaum"},
+     { question: "3)In which year was the Python language developed?" , options:["1995","1972","1981","1989"],correct: "1989"},
+     { question: "4) In C language is Python written?" , options:["TRUE","FLASE"],correct: "TRUE"},
+     { question: "5) Which one of the following is the correct extension of the Python file?" , options:[".py",".python",".p","None of these above"],correct: ".py"},
+     { question: "6) Python 3.0 version was developed in 2000?" , options:["TRUE","FLASE"],correct: "FLASE"},
+     { question: "7) What do we use to define a block of code in Python language??" , options:["Key","Indentation"],correct: "Indentation"},
+     { question: "8) Which character is used in Python to make a single line comment?", options:["/","//","#","!"],correct: "#"},
+     { question: "9)Which of the following statements is correct regarding the object-oriented programming concept in Python?" , options:["Classes are real-world entities while objects are not real","Objects are real-world entities while classes are not real","Both objects and classes are real-world entities","All of the above"],correct: "Objects are real-world entities while classes are not real"},
+     { question: "10)What is the method inside the class in python language?" , options:["Object","Function"],correct: "Function"},
+],
+ DS:[
+     { question: "1) Which one of the following node is considered the top of the stack if the stack is implemented using the linked list?" , options:["First node","Second node","Last node","None of these"],correct: "First node"},  
+     { question: "2) The minimum number of stacks required to implement a stack is 2?" , options:["TRUE","FLASE"],correct: "TRUE"}, 
+     { question: "3)  What is the outcome of the prefix expression +, -, *, 3, 2, /, 8, 4, 1?", options:["12","11","5","4"],correct: "5"}, 
+     { question: "4) If the elements '1', '2', '3' and '4' are added in a stack, so what would be the order for the removal?" , options:["1234","2134","4321","None of these"],correct: "4321"}, 
+     { question: "5) Which of the following is not the correct statement for a stack data structure?" , options:["Arrays can be used to implement the stack","Stack follows FIFO"],correct: "Stack follows FIFO"}, 
+     { question: "6) Which of the following is the infix expression?", options:["A+B*C","+A*BC","ABC+","None of these"],correct: "A+B*C"}, 
+     { question: "7) Which of the following is the prefix form of A+B*C?" , options:["A+(BC*)","+AB*C","ABC+*","+A*BC"],correct: "+A*BC"}, 
+     { question: "8) Which data structure is required to convert the infix to prefix notation?" , options:["Stack","Linked list"],correct: "Stack"}, 
+     { question: "9) Which data structure is mainly used for implementing the recursive algorithm?" , options:["Queue","Stack","Binary tree","Linked list"],correct: "Stack"}, 
+     { question: "10)Backtracking is not the application of the stack data structure" , options:["TRUE","FLASE"],correct: "FLASE"}, 
+]
+}; 
+function checkAllAnswered() {
+    const userAnswers = answers[currentSubject];
+    const allAnswered = userAnswers.every(answer => answer !== "");
+    const submitButton = document.getElementById("submit-btn");
+    if (allAnswered) {
+        submitButton.disabled = false;
+    } else {
+        submitButton.disabled = true;
+    }
+}
+        function startQuiz() {
+            currentSubject = document.getElementById("subject-select").value;
+            currentQuestionIndex = 0;
+            answers[currentSubject] = Array(quizData[currentSubject].length).fill(""); 
+            showQuestion();
+            startTimer();
+            document.getElementById("quiz").style.display = "block";
+            document.getElementById("start-btn").disabled = true;
+            const submitButton = document.getElementById("submit-btn");
+            submitButton.disabled = true;
+        }
+        document.querySelectorAll('input[name="answer"]').forEach((input) => {
+    input.addEventListener('click', checkAllAnswered);
+});
+
+function showQuestion() {
+    const questionContainer = document.getElementById("question-container");
+    const currentQuestion = quizData[currentSubject][currentQuestionIndex];
+    questionContainer.innerHTML = `
+        <p>${currentQuestion.question}</p>
+        ${currentQuestion.options.map((option, index) => `
+            <input type="radio" name="answer" value="${option}" id="option${index}" 
+                ${answers[currentSubject][currentQuestionIndex] === option ? 'checked' : ''}
+                onclick="answers['${currentSubject}'][${currentQuestionIndex}] = '${option}';checkAllAnswered()">
+            <label for="option${index}">${option}</label>
+        `).join('')}
+    `;
+}
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData[currentSubject].length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+        function startTimer() {
+            timer = setInterval(function () {
+                const minutes = Math.floor(totalTime / 60);
+                const seconds = totalTime % 60;
+                document.getElementById("time").innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                if (totalTime <= 0) {
+                    clearInterval(timer);
+                    disableButtons();
+                    alert("Time completed!");
+                    submitQuiz(); 
+                }
+                totalTime--;
+            }, 1000);
+        }
+        function submitQuiz() {
+            clearInterval(timer);
+            disableButtons();
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("result").style.display = "block";
+            const { correctCount, totalQuestions } = checkAnswers(); 
+            const percentage = (correctCount / totalQuestions) * 100;
+            document.getElementById("correct-answers").innerText = `Number of correct answers: ${correctCount} out of ${totalQuestions}`;
+            document.getElementById("percentage").innerText = `Percentage: ${percentage.toFixed(2)}%`;
+        }
+        function checkAnswers() {
+    const correctAnswers = quizData[currentSubject].map(question => question.correct);
+    const userAnswers = answers[currentSubject];
+    let correctCount = 0;
+    for (let i = 0; i < correctAnswers.length; i++) {
+        if (userAnswers[i] === correctAnswers[i]) {
+            correctCount++;
+        }
+    }
+    const totalQuestions = correctAnswers.length; 
+    return {
+        correctCount,
+        totalQuestions 
+    };
+}
+
+        function disableButtons() {
+            document.getElementById("prev-btn").disabled = true;
+            document.getElementById("next-btn").disabled = true;
+            document.getElementById("submit-btn").disabled = true;
+        }
+    </script>
+   </body>
+</html>
